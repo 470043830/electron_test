@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # electron-quick-start
 
 **Clone and run for a quick way to see Electron in action.**
@@ -44,6 +43,3 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 ## License
 
 [CC0 1.0 (Public Domain)](LICENSE.md)
-=======
-# electron_test
->>>>>>> acff9ffb3f0a3606f8b304b95a67918dc70c98f3
