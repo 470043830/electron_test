@@ -15,9 +15,6 @@ const path = require('path');
 //     event.returnValue = 'pong222';
 // })
 
-
-
-
 function createWindow() {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
