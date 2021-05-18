@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+
 
 // 在主进程中.
 // const { ipcMain } = require('electron');
@@ -14,6 +15,15 @@ const path = require('path');
 //     console.log(arg); // prints "ping"
 //     event.returnValue = 'pong222';
 // })
+
+ipcMain.on('showBox', (event, arg) => {
+    console.log('showBox ', arg);
+    const { dialog } = require('electron');
+    dialog.showMessageBox({ type: 'info', title: "消息", message: '消息', detail: arg }, function (message) {
+        console.log(message);
+    });
+})
+
 
 function createWindow() {
     // Create the browser window.
@@ -34,7 +44,8 @@ function createWindow() {
     // const loadUrl = 'https://www.szwego.com/circle/index.html#/shop_detail/A201905291653236670027260'; //'https://channels.weixin.qq.com/login';  //'https://channels.weixin.qq.com/login';
 
     // const loadUrl = 'http://localhost:8082/static/index.html#/circle_form';
-    const loadUrl = 'https://channels.weixin.qq.com/login';
+    // const loadUrl = 'https://channels.weixin.qq.com/login';
+    const loadUrl = 'https://www.szwego.com/circle/index.html';
     mainWindow.loadURL(loadUrl, { userAgent: 'Chrome' });
 
     // Open the DevTools.
@@ -50,6 +61,13 @@ function createWindow() {
     //         windowLoaded: true
     //     });
     // });
+
+    // setTimeout(() => {
+    //     const { dialog } = require('electron');
+    //     dialog.showMessageBox({ type: 'info', title: "显示消息", message: '消息', detail: '这是一个提示的消息片段' }, function (message) {
+    //         console.log(message);
+    //     });
+    // }, 3000);
 }
 
 // This method will be called when Electron has finished

@@ -5,6 +5,12 @@ const storage = require('electron-localstorage');
 let fs = require('fs');       //引入文件读取模块
 let request = require('request');
 
+const http = require("https"); //require('http');
+var crypto = require('crypto');
+const FormData = require('./formData.js');
+const AuthLogin = require('./auth_login');
+const FinderPublish = require('./finder_publish');
+
 const { contextBridge } = require('electron');
 
 contextBridge.exposeInMainWorld('myAPI111', (url) => { console.log('myAPI111 in electron'); window.onloadcc(url); });
@@ -53,15 +59,20 @@ window.addEventListener('DOMContentLoaded', () => {
 window.onload = function () {
     let image_maker = document.querySelector('#app');
     if (!image_maker) image_maker = document.querySelector('#container');
-    let clearcanvas = document.createElement("div");
-    clearcanvas.innerText = "清空画板";
-    clearcanvas.style = "box-sizing:border-box;line-height:40px;position:absolute;top:10px;left:10px;width:100px;height:40px;border-radius:20px;background-color:#abf;text-align:center;cursor: pointer;font-weight: 700;-webkit-user-select: none; z-index:999;";
-    image_maker.appendChild(clearcanvas);
+    let btn1 = document.createElement("div");
+    btn1.id = "container-test-btn1";
+    btn1.innerText = "登录";
+    btn1.style = "box-sizing:border-box;line-height:40px;position:absolute;top:50px;left:10px;width:100px;height:40px;border-radius:20px;background-color:#abf;text-align:center;cursor: pointer;font-weight: 700;-webkit-user-select: none; z-index:999;";
+    image_maker.appendChild(btn1);
     // ......都用的行内样式
     // image_maker.appendChild(background);
-    clearcanvas.onclick = async (e) => {
+    btn1.onclick = async (e) => {
         //window.fsdshowpng();
-        console.log('clearcanvas...');
+        // console.log('btn1...');
+        // AuthLogin.auth_login_code();
+        // console.log('btoa...', btoa('123456789'));
+        AuthLogin.demo();
+        return;
 
         // helper_upload_params();
         const ret = await download('https://xcimg.szwego.com/20200815/i1597451354_227_0.jpg?imageMogr2/auto-orient/thumbnail/!320x320r/quality/100/format/jpg');
@@ -78,6 +89,15 @@ window.onload = function () {
         console.log('img_thumb_20350: ', img_thumb_20350);
         post_create('uid```' + guid2(), img_url_20304, img_thumb_20350);
     };
+
+    let btn2 = document.createElement("div");
+    btn2.innerText = "发布";
+    btn2.style = "box-sizing:border-box;line-height:40px;position:absolute;top:100px;left:10px;width:100px;height:40px;border-radius:20px;background-color:#abf;text-align:center;cursor: pointer;font-weight: 700;-webkit-user-select: none; z-index:999;";
+    image_maker.appendChild(btn2);
+    btn2.onclick = async (e) => {
+        // console.log('btn2...');
+        FinderPublish.demo();
+    }
 
     // window.onload111 = clearcanvas.onclick;
     // console.log('document: ', document, window);
@@ -258,9 +278,7 @@ async function post_create(description, img_url_20304, img_thumb_20350) {
 
 
 
-const http = require("https"); //require('http');
-var crypto = require('crypto');
-const FormData = require('./formData.js');
+
 
 function guid2() {
     function S4() {
