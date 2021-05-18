@@ -5,7 +5,7 @@ const http = require("https"); //require('http');
 const crypto = require('crypto');
 const sizeOf = require('image-size');
 const FormData = require('./formData.js');
-const { browserData, getHeaders } = require('./auth_login');
+let AuthLogin = require('./auth_login');
 
 const testAlbumImgs = [
     "https://xcimg.szwego.com/20201120/i1605845854_3794_0.jpg?imageMogr2/auto-orient/thumbnail/!320x320r/quality/100/format/jpg"
@@ -23,8 +23,7 @@ async function post_create(finder_username, finder_raw, description, imgData) {
     // return;
     const url = 'https://channels.weixin.qq.com/cgi-bin/mmfinderassistant-bin/post/post_create';
     const md5sum = guid2();
-    // const img_url_20304 = "https://wxapp.tc.qq.com/251/20304/stodownload?adaptivelytrans=0&bizid=1023&dotrans=0&encfilekey=RBfjicXSHKCOONJnTbRmmlD8cOQPXE48ibSVZeicjeiamS5a11jKy2ymibtYeia5o0qfkhbGgGj5Dnygv8zpfItLicialAVaiaN9w1fxmCyib3xLSKoKy4icoRBR3RQht5g0xERfyeNeiav7s1xiacohjxs6ZhaFQfJGU0p71zuQaBrcVb3AceZw&hy=SH&idx=1&m=0e3b4d8a10ff8687ce137fca3d6f8910&token=6xykWLEnztKKLTUQvHPfqmPa5ica02l5FVXniaicCA9MAtpfl93UWS1DOpAMDCr3xxB8kvyMliaJHicnjaUctfF1eMA";
-    // const img_thumb_20350 = "https://wxapp.tc.qq.com/251/20350/stodownload?adaptivelytrans=0&bizid=1023&dotrans=0&encfilekey=RBfjicXSHKCOONJnTbRmmlD8cOQPXE48ibUA6YBNjJoUnr50ltcYSVyMuPILTFibia6EDoGjDdmdf99AlLEhF4TCMDuETcVrrHic3BT4HJyrTgUvbQzp6VKr4KpKKqlmgvCKX6W5v2jnwSicJSY7wv8M53hrzhVMwib0mvknEia0jB1jF4I&hy=SH&idx=1&m=f46628de6d25b1524492c195c25e1e94&token=6xykWLEnztKKLTUQvHPfqmPa5ica02l5FDoZL7jwc0dqIz5cwT4jPVfiaFPlIgHcQnrCGMK1OicS2YBrjtknzIrNA";
+
     const postData = {
         "objectType": 0, "longitude": 0, "latitude": 0, "feedLongitude": 0, "feedLatitude": 0, "originalFlag": 0, "topics": [],
         "isFullPost": 1,
@@ -63,56 +62,21 @@ async function post_create(finder_username, finder_raw, description, imgData) {
     console.log('postData: ', postData);
     // postData["timestamp"] = Date.now() + '';
     // postData["clientid"] = "8d90442d-7d45-424c-b25a-f9ef187a9600";
-    const { objectDesc: { media } } = postData;
-    // console.log('media: ', media[0]);
-    // media[0].fullMd5sum = '2b218b81-ff88-4f7b-a797-2d7839784567';
-    // media[0].md5sum = '1b218b81-ff88-4f7b-a797-2d7839784567';
-    // media[0].url = 'https://xcimg.szwego.com/20200815/i1597451354_227_0.jpg?imageMogr2/auto-orient/thumbnail/!320x320r/quality/100/format/jpg';
-    // return;
+    // const { objectDesc: { media } } = postData;
 
-    // const response = await fetch(url, {
-    //     method: 'POST',
-    //     mode: "cors",
-    //     headers: {
-    //         'Accept': 'application/json, text/plain, */*',
-    //         'Accept-Encoding': 'gzip, deflate, br',
-    //         'Content-Type': 'application/json;charset=UTF-8',
-    //         'X-WECHAT-UIN': 'djJfMDYwMDAwMjMxMDAzYjIwZmFlYzhjNGU0ODkxY2NhZDVjODAxZWQzNmIwNzcwODk2MTdkMWMxZWZlMzczODMwMGI2Y2JhYzdlYTQ4N0BmaW5kZXI=',
-    //         'Cookie': 'sessionid=AATVfYAEAAABAAAAAAAf%2BxIZNvc5P6aLFxGeYCAAAADzrBEppsryM1QLZ%2BdDmBLm9XwcA0exd%2BeEMM5e%2BlsrRx0s4T8JqSEr9to9r8%2Bdp%2FWhk7BrPwjl3cIdyHgAZyuJzlNyGWKI%2FNdKz77KpV83RN0NniBW4D8XfI2Y',
-    //         'referer': 'https://channels.weixin.qq.com/',
-    //         'Host': 'channels.weixin.qq.com',
-    //         'sec-fetch-dest': 'empty',
-    //         'sec-fetch-mode': 'cors',
-    //         'sec-fetch-site': 'same-site',
-    //         'user-agent': 'Chrome'
-    //     },
+    // request({
+    //     url: url,
+    //     method: "POST",
+    //     // json: true,
+    //     headers: AuthLogin.getHeaders(),
     //     body: JSON.stringify(postData)
+    // }, function (error, response, body) {
+    //     console.log('body: ', body);
+    //     if (!error && response.statusCode == 200) {
+    //     }
     // });
 
-    request({
-        url: url,
-        method: "POST",
-        // json: true,
-        headers: getHeaders(),
-        // {
-        //     'Accept': 'application/json, text/plain, */*',
-        //     'Accept-Encoding': 'gzip, deflate, br',
-        //     'Content-Type': 'application/json;charset=UTF-8',
-        //     'X-WECHAT-UIN': 'djJfMDYwMDAwMjMxMDAzYjIwZmFlYzhjNGU0ODkxY2NhZDVjODAxZWQzNmIwNzcwODk2MTdkMWMxZWZlMzczODMwMGI2Y2JhYzdlYTQ4N0BmaW5kZXI=',
-        //     'Cookie': document.cookie, //'sessionid=AATVfYAEAAABAAAAAABvVDw3l0IfOvLRcz%2BeYCAAAADzrBEppsryM1QLZ%2BdDmBLm9XwcA0exd%2BeEMM5e%2BlsrR43prDAZsMIIbi%2FRZz5HhzKYo02557gwnQJ1jx9V1xT0syQEoAraSIqJrG4UrXTxb7kBOOTliLThzJpz', //这里会随时更新，必须填写正确
-        //     'referer': 'https://channels.weixin.qq.com/',
-        //     'Host': 'channels.weixin.qq.com',
-        //     'sec-fetch-dest': 'empty',
-        //     'sec-fetch-mode': 'cors',
-        //     'sec-fetch-site': 'same-site',
-        //     'user-agent': 'Chrome'
-        // },
-        body: JSON.stringify(postData)
-    }, function (error, response, body) {
-        console.log('body: ', body);
-        if (!error && response.statusCode == 200) {
-        }
-    });
+    return AuthLogin.http_post(url, postData);
 
 }
 
@@ -131,17 +95,17 @@ function guid2() {
 async function getWxUploadObj(filePath, filetype) {
     const { size } = fs.statSync(filePath);
     const md5 = await getMD5(filePath);
-    if (!browserData.uin) {
-        console.log('browserData.uin is ', browserData.uin);
+    if (!AuthLogin.getBrowserData().uin) {
+        console.log('AuthLogin.getBrowserData().uin is ', AuthLogin.getBrowserData().uin);
         return null;
     }
     return {
         ver: 1,
         seq: Date.now(),
-        weixinnum: browserData.uin,
-        apptype: browserData.appType, //251,
+        weixinnum: AuthLogin.getBrowserData().uin,
+        apptype: AuthLogin.getBrowserData().appType, //251,
         filetype: filetype, //20304,
-        authkey: browserData.authkey,//'3043020101043c303a0201010201010204bebe17d902032013bc0204798b20650204126e216502031ee2b90204d7f8cdcb02049ff9cdcb020460ec330d0204fd88d4d10400',
+        authkey: AuthLogin.getBrowserData().authkey,//'3043020101043c303a0201010201010204bebe17d902032013bc0204798b20650204126e216502031ee2b90204d7f8cdcb02049ff9cdcb020460ec330d0204fd88d4d10400',
         hasthumb: 0,
         filekey: 'finder_video_img.jpeg',
         totalsize: size,
@@ -248,6 +212,10 @@ function download(url) {
     });
 }
 
+let publishCallback = null;
+function onPublishOk(callback) {
+    publishCallback = callback;
+}
 
 async function publish(title, imgs) {
     console.log('publish...', title, imgs);
@@ -272,25 +240,28 @@ async function publish(title, imgs) {
     const { fileurl: img_thumb_20350 } = JSON.parse(uploadRet);
     console.log('img_thumb_20350: ', img_thumb_20350);
 
-    post_create(browserData.finderUsername, browserData.rawKeyBuff, title, { img_url_20304, img_thumb_20350, width, height, size });
+    const postRet = await post_create(AuthLogin.getBrowserData().finderUsername, AuthLogin.getBrowserData().rawKeyBuff, title, { img_url_20304, img_thumb_20350, width, height, size });
+    console.log('postRet: ', postRet);
+    publishCallback && publishCallback();
 }
 
 let testImgIndex = 0;
 async function demo() {
-    console.log('demo...', testImgIndex);
-
-    if (!browserData.logined) {
+    console.log('demo...', testImgIndex, AuthLogin.getBrowserData());
+    if (!AuthLogin.getBrowserData().logined) {
         const { ipcRenderer } = require('electron');
         ipcRenderer.send('showBox', '请先登录！');
         return;
     }
-    return;
 
     if (testImgIndex >= testAlbumImgs.length) {
+        testImgIndex = 0;
+        publishCallback && publishCallback();
         return;
     }
     const ret = await publish('title_' + testImgIndex, [testAlbumImgs[testImgIndex]]);
-    testImgIndex++;
+    // testImgIndex++;
+    testImgIndex = testAlbumImgs.length;
     setTimeout(() => {
         demo();
     }, 1000);
@@ -298,3 +269,4 @@ async function demo() {
 
 exports.demo = demo;
 exports.publish = publish;
+exports.onPublishOk = onPublishOk;

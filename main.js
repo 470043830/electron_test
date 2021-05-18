@@ -17,10 +17,10 @@ const path = require('path');
 // })
 
 ipcMain.on('showBox', (event, arg) => {
-    console.log('showBox ', arg);
+    // console.log('showBox ', arg);
     const { dialog } = require('electron');
     dialog.showMessageBox({ type: 'info', title: "消息", message: '消息', detail: arg }, function (message) {
-        console.log(message);
+        // console.log(message);
     });
 })
 
@@ -45,7 +45,8 @@ function createWindow() {
 
     // const loadUrl = 'http://localhost:8082/static/index.html#/circle_form';
     // const loadUrl = 'https://channels.weixin.qq.com/login';
-    const loadUrl = 'https://www.szwego.com/circle/index.html';
+    // const loadUrl = 'https://www.szwego.com/circle/index.html';
+    const loadUrl = `http://192.168.1.86:8082/static/index.html?t=1621321022098#/shop_detail/A201905291653236670027260`;
     mainWindow.loadURL(loadUrl, { userAgent: 'Chrome' });
 
     // Open the DevTools.
